@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using MyChat.Models;
+using MyChat.Services.Abstracts;
 
 namespace MyChat.Services;
 
@@ -12,6 +13,7 @@ public class AdminInitializer
         string adminName = "SuperAdmin";
         string adminEmail = "admin@admin.com";
         string adminPassword = "1234Aa";
+        string avatar = Path.Combine(@"\Logo", "primalLogo.png");
 
         var roles = new string[] { "admin", "user" };
         foreach (var role in roles)
@@ -25,7 +27,9 @@ public class AdminInitializer
             User admin = new User
             {
                 Email = adminEmail,
-                UserName = adminName
+                UserName = adminName,
+                Avatar = avatar,
+                DateOfBirthday = new DateOnly(1998, 02, 17)
             };
 
             var result = await userManager.CreateAsync(admin, adminPassword);
