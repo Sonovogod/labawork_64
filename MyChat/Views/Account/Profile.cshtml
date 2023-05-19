@@ -1,0 +1,35 @@
+@model instagram.Services.ViewModels.Users.UserProfileViewModel
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="profile">
+        <div class="profile-image">
+          <img class="d-block" src="@Model.Avatar" alt="@Model.UserName">
+        </div>
+        <div class="profile-user-settings">
+          <h1 class="profile-user-name">@Model.UserName</h1>
+          @if (User.Identity.Name == Model.UserName)
+          {
+            <a class="btn btn-primary" asp-controller="Account" asp-action="EditProfile">Редактировать профиль</a>
+            <form class="float-end" method="post" asp-action="LogOff" asp-controller="Account" asp-antiforgery="true">
+              <button type="submit" class="btn btn-primary">Выход</button>
+            </form>
+          }
+        </div>
+        <div class="profile-stats">
+          <ul>
+            <li class="text-secondary">
+              <span id="posts-@Model.UserName" class="profile-stat-count text-secondary">@Model.Messages.Count</span> всего сообщений
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

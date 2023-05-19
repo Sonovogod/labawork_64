@@ -62,4 +62,9 @@ public class FileService : IFileService
         image.Save(filePath, new JpegEncoder() { Quality = 100 });
         return Path.Combine(@$"\{imageProfile.Folder}", fileName);
     }
+
+    public string GetPrimalImgPath()
+    {
+        return Path.Combine(@"\Logo", "primalLogo.png");
+    }
 }

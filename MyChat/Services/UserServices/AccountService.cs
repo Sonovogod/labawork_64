@@ -1,8 +1,10 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MyChat.Extensions;
 using MyChat.Models;
 using MyChat.Services.Abstracts;
+using MyChat.Services.ViewModels.Users;
 
 namespace MyChat.Services.UserServices;
 
@@ -40,5 +42,14 @@ public class AccountService : IAccountService
                 .Include(x=> x.Messages)
                 .FirstOrDefaultAsync(x => x.NormalizedUserName != null && x.NormalizedUserName.Equals(key.ToUpper()));
         return user;
+    }
+    
+    public async Task<IdentityResult> Add(UserRegisterViewModel model)
+    {
+        User user = model.MapToUserModel();
+        user.UserName = model.UserName.ToLower();
+        user.DateOfCreate = DateTime.Now;
+        IdentityResult result = await _db.CreateAsync(user, model.Password);
+        return result;
     }
 }
