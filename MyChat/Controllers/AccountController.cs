@@ -28,7 +28,7 @@ public class AccountController : Controller
     public IActionResult Login(string? returnUrl)
     {
         if (User.Identity.IsAuthenticated)
-            return RedirectToAction("", "");
+            return RedirectToAction("Profile", new { userName = User.Identity.Name });
         return View(new UserLoginViewModel {ReturnUrl = returnUrl});
     }
 
@@ -37,7 +37,7 @@ public class AccountController : Controller
     public async Task<IActionResult> Login(UserLoginViewModel model)
     {
         if (User.Identity.IsAuthenticated)
-            return RedirectToAction("", "");
+            return RedirectToAction("Profile", "Account");
         if (ModelState.IsValid)
         {
             User? user = await _accountService.FindByEmailOrLoginAsync(model.EmailOrLogin);
@@ -52,7 +52,7 @@ public class AccountController : Controller
                         return Redirect(model.ReturnUrl);
                     }
 
-                    return RedirectToAction("", new { userName = user.UserName });
+                    return RedirectToAction("Profile", new { userName = User.Identity.Name });
                 }
 
             }
@@ -73,11 +73,11 @@ public class AccountController : Controller
     
     [HttpPost]
     [AllowAnonymous]
-    public async Task<IActionResult> Register(UserRegisterViewModel model, IFormFile uploadedFile)
+    public async Task<IActionResult> Register(UserRegisterViewModel model, IFormFile? uploadedFile)
     {
         if (ModelState.IsValid)
         {
-            if (uploadedFile.Length == 0)
+            if (uploadedFile is null)
             {
                 string filePath = _fileService.GetPrimalImgPath();
                 model.Avatar = filePath;
@@ -88,21 +88,21 @@ public class AccountController : Controller
             {
                 string filePath = _fileService.SaveImage(uploadedFile, ImageType.Logo);
                 model.Avatar = filePath;
-                
-                var result = await _accountService.Add(model);
-                if (result.Succeeded)
-                {
-                    User? user = await _accountService.FindByEmailOrLoginAsync(model.Email);
-                    await _signInManager.SignInAsync(user, true);
-                    return RedirectToAction("Profile", "Account", new {userName = user.UserName});
-                }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-                ModelState.AddModelError("CreateUserError", "Ошибка при создании пользователя");
             }
             ModelState.AddModelError("incorrectLogo", "Ошибка загрузки, фото не соответсвует требованиям");
+            
+            var result = await _accountService.Add(model);
+            if (result.Succeeded)
+            {
+                User? user = await _accountService.FindByEmailOrLoginAsync(model.Email);
+                await _signInManager.SignInAsync(user, true);
+                return RedirectToAction("Profile", "Account", new {userName = user.UserName});
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+            ModelState.AddModelError("CreateUserError", "Ошибка при создании пользователя");
         }
         ModelState.AddModelError("incorrectRegistration", "Ошибка регистрации!");
 
