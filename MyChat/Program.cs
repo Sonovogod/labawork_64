@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyChat.Models;
+using MyChat.Services.Abstracts;
+using MyChat.Services.FileServices;
+using MyChat.Services.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,8 @@ builder.Services.AddDbContext<ChatContext>(options => options.UseNpgsql(connecti
     })
     .AddEntityFrameworkStores<ChatContext>();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IFileService, FileService>();
 
 var app = builder.Build();
 
