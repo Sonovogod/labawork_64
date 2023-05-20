@@ -1,4 +1,22 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(() => {
+    let passFields = $('#passwordField');
+    let confPassFields = $('#confirmPasswordField');
+    let open = $('#openEyeIco');
+    let close = $('#closeEyeIco');
 
-// Write your JavaScript code.
+    close.on('click', function (event){
+        event.preventDefault();
+        passFields.attr('type', 'text');
+        confPassFields.attr('type', 'text');
+        open.removeAttr('hidden');
+        close.attr('hidden', 'hidden');
+    })
+
+    open.on('click', function (event){
+        event.preventDefault();
+        passFields.attr('type', 'password');
+        confPassFields.attr('type', 'password');
+        close.removeAttr('hidden');
+        open.attr('hidden', 'hidden');
+    })
+})

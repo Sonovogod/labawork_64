@@ -1,0 +1,14 @@
+.resetButton{
+    border: none;
+    outline: none;
+    background-color: #fff;
+}
+.inputPassBlock{
+    position: relative;
+}
+.icoForPass{
+    position: absolute;
+    right: 1px;
+    top: 5px;
+    margin-left: 5px;
+}

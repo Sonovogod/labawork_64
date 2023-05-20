@@ -52,7 +52,7 @@ public class AccountController : Controller
                         return Redirect(model.ReturnUrl);
                     }
 
-                    return RedirectToAction("Profile", new { userName = User.Identity.Name });
+                    return RedirectToAction("Profile", new { userName = user.UserName });
                 }
 
             }
@@ -77,19 +77,18 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            if (uploadedFile is null)
-            {
-                string filePath = _fileService.GetPrimalImgPath();
-                model.Avatar = filePath;
-            }
-            
             bool fileValid = _fileService.FileValid(uploadedFile, ImageType.Logo);
-            if (fileValid && uploadedFile.Length != 0)
+            if (fileValid)
             {
                 string filePath = _fileService.SaveImage(uploadedFile, ImageType.Logo);
                 model.Avatar = filePath;
             }
-            ModelState.AddModelError("incorrectLogo", "Ошибка загрузки, фото не соответсвует требованиям");
+            else
+            {
+                string filePath = _fileService.GetPrimalImgPath();
+                model.Avatar = filePath;
+                ModelState.AddModelError("incorrectLogo", "Не удалось загрузить добавляемое фото, фото не соответсвует требованиям, будет загружено стандартное");
+            }
             
             var result = await _accountService.Add(model);
             if (result.Succeeded)
