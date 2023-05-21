@@ -19,12 +19,31 @@ public class AccountService : IAccountService
         _dbChat = dbChat;
     }
 
-    public bool UserNameUnique(string userName)
-        => !_db.Users.Any(x => x.UserName != null && x.UserName.ToLower().Equals(userName.ToLower()));
+    public bool UserNameUnique(string userName, string id)
+    {
+        if (!string.IsNullOrEmpty(id))
+        {
+            bool nameIsExist = _dbChat.Users.Any(x => x.UserName != null && x.Id != id && x.UserName.ToLower().Equals(userName.ToLower()));
+            if (nameIsExist)
+                return false;
+            return true;
+        }
 
-    public bool UserEmailUnique(string email)
-        => !_db.Users.Any(x => x.Email != null && x.Email.ToLower().Equals(email.ToLower()));
-    
+        return !_dbChat.Users.Any(x => x.UserName != null && x.UserName.ToLower().Equals(userName.ToLower()));
+    }
+
+    public bool UserEmailUnique(string email, string id)
+    {
+        if (!string.IsNullOrEmpty(id))
+        {
+            bool emailIsExist = _dbChat.Users.Any(x => x.Email != null && x.Id != id && x.Email.ToLower().Equals(email.ToLower()));
+            if (emailIsExist)
+                return false;
+            return true;
+        }
+        return !_dbChat.Users.Any(x => x.Email != null && x.Email.ToLower().Equals(email.ToLower()));
+    }
+
     public async Task<User?> FindByEmailOrLoginAsync(string? key)
     {
         User? user = new User();
@@ -50,6 +69,14 @@ public class AccountService : IAccountService
         user.UserName = model.UserName.ToLower();
         user.DateOfCreate = DateTime.Now;
         IdentityResult result = await _db.CreateAsync(user, model.Password);
+        return result;
+    }
+
+    public async Task<IdentityResult> UpdateInfo(UserEditViewModel model, string userName)
+    {
+        User user = _db.Users.FirstOrDefault(x => x.UserName.ToLower().Equals(userName.ToLower()));
+        user.MapToUpdateUserModel(model);
+        IdentityResult result = await _db.UpdateAsync(user);
         return result;
     }
 }

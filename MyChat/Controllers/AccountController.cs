@@ -122,7 +122,8 @@ public class AccountController : Controller
     public async Task<IActionResult> Profile(string userName)
     {
         User? user = await _accountService.FindByEmailOrLoginAsync(userName);
-        var totalUserId = _accountService.FindByEmailOrLoginAsync(User.Identity.Name).Result.Id;
+        string totalUser = User.Identity.Name;
+        var totalUserId = _accountService.FindByEmailOrLoginAsync(totalUser).Result.Id;
         if (user is not null)
         {
             UserProfileViewModel userView = user.MapToUserProfileViewModel();
@@ -134,8 +135,46 @@ public class AccountController : Controller
         return NotFound();
     }
 
-    public IActionResult EditProfile()
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> EditProfile()
+        {
+        User currentUser = await _accountService.FindByEmailOrLoginAsync(User.Identity.Name);
+        UserEditViewModel model = currentUser.MapToUserEditViewModel();
+
+        return View(model);
+    }
+        
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditProfile(UserEditViewModel model, IFormFile? uploadedFile)
     {
-        throw new NotImplementedException();
+        if (ModelState.IsValid)
+        {
+            bool fileValid = _fileService.FileValid(uploadedFile, ImageType.Logo);
+            if (fileValid)
+            {
+                string filePath = _fileService.SaveImage(uploadedFile, ImageType.Logo);
+                model.Avatar = filePath;
+            }
+            else
+            {
+                string filePath = _fileService.GetPrimalImgPath();
+                model.Avatar = filePath;
+                ModelState.AddModelError("incorrectLogo", "Не удалось загрузить добавляемое фото, фото не соответсвует требованиям, будет загружено стандартное");
+            }
+            
+            IdentityResult result = await _accountService.UpdateInfo(model, User.Identity.Name);
+            if (result.Succeeded)
+            {
+                User? user = await _accountService.FindByEmailOrLoginAsync(model.Email);
+                await _signInManager.SignInAsync(user, true);
+                return RedirectToAction("Profile", "Account", new {userName = user.UserName});
+            }
+            return NotFound();
+        }
+        ModelState.AddModelError("incorrectEditing", "Ошибка изменения профиля!");
+        return View(model);
     }
 }

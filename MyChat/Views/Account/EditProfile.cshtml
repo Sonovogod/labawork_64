@@ -1,0 +1,42 @@
+@model MyChat.Services.ViewModels.Users.UserEditViewModel
+
+@{
+    ViewBag.Title = "Редактирование профиля";
+    Layout = "_Layout";
+}
+<div class="container mtStandatr">
+    <h2>Редктирование профиля</h2>
+    <form asp-action="EditProfile" method="post" asp-antiforgery="true" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="userName" class="form-label" asp-for="UserName"></label>
+            <input type="text" class="form-control" id="userName" asp-for="UserName">
+            <span class="text-danger" asp-validation-for="UserName"></span>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label" asp-for="Email"></label>
+            <input type="email" class="form-control" id="exampleInputEmail1" asp-for="Email">
+            <span class="text-danger" asp-validation-for="Email"></span>
+        </div>
+        <div class="mb-3">
+            <label for="dateBirthday" class="form-label" asp-for="DateOfBirthday"></label>
+            <input type="date" class="form-control" id="dateBirthday" asp-for="DateOfBirthday">
+            <span class="text-danger" asp-validation-for="DateOfBirthday"></span>
+        </div>
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="inputGroupFile01" asp-for="Avatar"></label>
+            <input type="file" class="form-control" id="inputGroupFile01" name="uploadedFile">
+            <div id="help" class="form-text">минимально 55х55px (jpg/jpen/png)</div>
+        </div>
+        <input hidden="hidden" asp-for="Id" value=@Model.Id>
+        <input type="hidden" asp-for="DateOfCreate" value=@Model.DateOfCreate>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+    <div class="text-danger" asp-validation-summary="All"></div>
+</div>
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

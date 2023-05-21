@@ -13,13 +13,13 @@ public class AccountValidationController
     }
 
     [AcceptVerbs("GET", "POST")]
-    public bool CheckUniqueName(string userName)
-        => _service.UserNameUnique(userName);
-    
-    
+    public bool CheckUniqueName(string userName, string id)
+        => _service.UserNameUnique(userName, id);
+
+
     [AcceptVerbs("GET", "POST")]
-    public bool CheckUniqueEmail(string email)
-        => _service.UserEmailUnique(email);
+    public bool CheckUniqueEmail(string email, string id)
+        => _service.UserEmailUnique(email, id);
 
     [AcceptVerbs("GET", "POST")]
     public bool CheckDateOfBirthday(DateOnly dateOfBirthday)

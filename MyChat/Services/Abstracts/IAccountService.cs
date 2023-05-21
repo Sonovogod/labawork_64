@@ -6,8 +6,9 @@ namespace MyChat.Services.Abstracts;
 
 public interface IAccountService
 {
-    public bool UserNameUnique(string userName);
-    public bool UserEmailUnique(string email);
+    public bool UserNameUnique(string userName, string id);
+    public bool UserEmailUnique(string email, string id);
     public Task<User?> FindByEmailOrLoginAsync(string key);
     public Task<IdentityResult> Add(UserRegisterViewModel model);
-}
+    public Task<IdentityResult> UpdateInfo(UserEditViewModel model, string userName);
+} 
