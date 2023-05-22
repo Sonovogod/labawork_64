@@ -62,6 +62,11 @@ public class AccountService : IAccountService
                 .FirstOrDefaultAsync(x => x.NormalizedUserName != null && x.NormalizedUserName.Equals(key.ToUpper()));
         return user;
     }
+
+    public User FindByUserName(string userName)
+    {
+        return _dbChat.Users.FirstOrDefault(x => x.UserName.ToLower().Equals(userName.ToLower()));
+    }
     
     public async Task<IdentityResult> Add(UserRegisterViewModel model)
     {

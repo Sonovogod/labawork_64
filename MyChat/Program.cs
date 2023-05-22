@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MyChat.Models;
 using MyChat.Services;
 using MyChat.Services.Abstracts;
+using MyChat.Services.ChatServices;
 using MyChat.Services.FileServices;
 using MyChat.Services.UserServices;
 
@@ -19,6 +20,7 @@ builder.Services.AddDbContext<ChatContext>(options => options.UseNpgsql(connecti
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 var app = builder.Build();
 var serviceProvider = app.Services;

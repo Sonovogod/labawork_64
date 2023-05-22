@@ -15,7 +15,7 @@
         <div class="container-fluid">
             @if (User.Identity.IsAuthenticated)
             {
-                <a class="navbar-brand" asp-area="" asp-controller="" asp-action="">Чат</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Chats" asp-action="CommonChat">Чат</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -69,6 +69,7 @@
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/settings.js" asp-append-version="true"></script>
+<script src="~/js/moment.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -27,6 +27,14 @@ public static class UserExtension
             DateOfBirthday = model.DateOfBirthday,
             Messages = model.Messages
         };
+    }   
+    public static UserViewModel MapToUserViewModel(this User model)
+    {
+        return new UserViewModel()
+        {
+            UserName = model.UserName,
+            Avatar = model.Avatar
+        };
     }
     public static UserEditViewModel MapToUserEditViewModel(this User model)
     {

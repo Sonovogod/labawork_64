@@ -1,0 +1,45 @@
+@model MyChat.Services.ViewModels.Chats.ChatViewModel
+
+@{
+    ViewBag.Title = "Чат";
+    Layout = "_Layout";
+}
+<div class="container">
+    <div class="col border border-2 border-dark p-3">
+        <div id="commetBlock" class="overflow-auto">
+            @if (Model.Messages.Any())
+            {
+                foreach (var message in Model.Messages)
+                {
+                    <div id="comment-@message.Id" class="media row mt-5">
+                        <div class="col-2">
+                            <div class="mr-3 rounded-circle border border-dark border-1">
+                                <img class="w-100 mr-3 rounded-circle" src="@message.User.Avatar" alt="@message.User.UserName">
+                            </div>
+                            <h5 class="mt-1 mx-2">@message.User.UserName</h5>
+                        </div>
+                        <div class="col-8 px-2">
+                            <small class="text-muted">@message.DateOfSend</small>
+                            <div class="w-50">
+                                <span>@message.Content</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <h2>Ваше сообщение будет первым</h2>
+            }
+        </div>
+        <div class="row" id="commentContainer">
+            <form asp-antiforgery="true" type="post">
+                <div>
+                    <textarea class="w-100" id="commentTheme" placeholder="Оставьте свое сообщение"></textarea>
+                </div>
+                <button Id="commentThemeBtn" class="btn btn-info">Отправить</button>
+            </form>
+        </div>
+    </div>
+    <div class="text-danger" asp-validation-summary="All"></div>
+</div>

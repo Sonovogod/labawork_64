@@ -11,4 +11,5 @@ public interface IAccountService
     public Task<User?> FindByEmailOrLoginAsync(string key);
     public Task<IdentityResult> Add(UserRegisterViewModel model);
     public Task<IdentityResult> UpdateInfo(UserEditViewModel model, string userName);
+    public User FindByUserName(string userName);
 } 
